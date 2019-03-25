@@ -1,0 +1,76 @@
+添加保存Button，头文件中#include <locale.h>
+
+在函数中添加如下代码。
+
+ 
+
+
+ 
+
+void CMyTestDlg::OnBnClickedButtonSave()
+
+{
+
+setlocale(LC_CTYPE, "chs");
+
+CString FileName;
+
+CFileDialog dlgFile(FALSE, _T("*.txt"), NULL, OFN_HIDEREADONLY, _T("Describe File(*.txt)|*.txt|All Files(*.*)|*.*||"), NULL);
+
+if (IDOK == dlgFile.DoModal())
+
+{
+
+FileName = dlgFile.GetPathName();
+
+}
+
+else
+
+{
+
+return;
+
+}
+
+ 
+
+CStdioFile FileWrite;
+
+if (!FileWrite.Open(FileName, CFile::modeWrite | CFile::modeCreate | CFile::typeText))
+
+{
+
+AfxMessageBox(_T("打开文件失败!"));
+
+return;
+
+}
+
+ 
+
+CString CaptionData = _T("");
+
+CaptionData = CaptionData + _T("批次 ");
+
+FileWrite.WriteString(CaptionData + _T("\r\n"));
+
+ 
+
+for (int i = 0; i <9; i++)
+
+{
+
+CString temp;
+
+temp.Format(_T("%d "), i);//需要保存的数据，注意格式
+
+FileWrite.WriteString(temp);
+
+FileWrite.WriteString(_T("\r\n"));
+
+}
+
+FileWrite.Close();
+
+}
